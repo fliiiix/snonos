@@ -1,10 +1,8 @@
 Snonos
 ======
 
-
 Turn your sonos music volume down when your snome phone rings.
-
-
+**Sno**m So**nos** 
 
 ##How to install
 1. install ruby
