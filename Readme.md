@@ -1,8 +1,7 @@
 Snonos
 ======
 
-Turn your sonos music volume down when your snome phone rings.
-**Sno**m So**nos** 
+**Sno**m So**nos** can turn your sonos music volume down when your snome phone rings.
 
 ##How to install
 1. install ruby
