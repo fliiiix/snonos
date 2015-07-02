@@ -16,13 +16,13 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 
 APP_ROOT="/usr/local/src/snonos"
-SNONOS_PID="$APP_ROOT/snonos.pid"
+PID_FILE="$APP_ROOT/snonos.pid"
 PORT=8080
 
 check_pid(){
-  if [ -f $SNONOS_PID ]; then
-    PID=`cat $SNONOS_PID`
-    STATUS=`ps aux | grep $SNONS_PID | grep -v grep | wc -l`
+  if [ -f $PID_FILE ]; then
+    PID=`cat $PID_FILE`
+    STATUS=`ps aux | grep $PID_FILE | grep -v grep | wc -l`
   else
     STATUS=0
     PID=0
@@ -36,7 +36,7 @@ do_start () {
     exit 1
   else
     cd $APP_ROOT
-    ./bin/rackup --host 0.0.0.0 --port $PORT --daemonize --pid $SNONOS_PID
+    ./bin/rackup --host 0.0.0.0 --port $PORT --daemonize --pid $PID_FILE
   fi
 }
 
@@ -44,8 +44,8 @@ do_stop() {
   check_pid
   if [ "$PID" -ne 0 -a "$STATUS" -ne 0 ]; then
     ## Program is running, stop it.
-    kill -9 `cat $SNONOS_PID`
-    rm "$SNONS_PID" >> /dev/null
+    kill -9 `cat $PID_FILE`
+    rm "$PID_FILE" >> /dev/null
     echo "Snonos stopped"
   else
     ## Program is not running, exit with error.
