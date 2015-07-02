@@ -1,0 +1,87 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          snonos
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:
+# Should-Start:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts the ruby daemon for snonos.
+# Description:       The init.d script which start a sinatra
+#                    server for snonos.
+### END INIT INFO
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+. /lib/init/vars.sh
+
+
+APP_ROOT="/usr/local/src/snonos"
+SNONOS_PID="$APP_ROOT/snonos.pid"
+PORT=8080
+
+check_pid(){
+  if [ -f $SNONOS_PID ]; then
+    PID=`cat $SNONOS_PID`
+    STATUS=`ps aux | grep $SNONS_PID | grep -v grep | wc -l`
+  else
+    STATUS=0
+    PID=0
+  fi
+}
+
+do_start () {
+  check_pid
+  if [ "$PID" -ne 0 -a "$STATUS" -ne 0 ]; then
+    echo "Snonos is currently running!"
+    exit 1
+  else
+    cd $APP_ROOT
+    ./bin/rackup --host 0.0.0.0 --port $PORT --daemonize --pid $SNONOS_PID
+  fi
+}
+
+do_stop() {
+  check_pid
+  if [ "$PID" -ne 0 -a "$STATUS" -ne 0 ]; then
+    ## Program is running, stop it.
+    kill -9 `cat $SNONOS_PID`
+    rm "$SNONS_PID" >> /dev/null
+    echo "Snonos stopped"
+  else
+    ## Program is not running, exit with error.
+    echo "Error! Snonos not started!"
+    exit 1
+  fi
+}
+
+do_status () {
+  check_pid
+  if [ "$PID" -ne 0 -a "$STATUS" -ne 0 ]; then
+    echo "$DESC with PID $PID is running."
+  else
+    echo "$DESC is not running."
+    exit 1
+  fi
+}
+
+case "$1" in
+  start)
+        do_start
+        ;;
+  stop)
+        do_stop
+        ;;
+  restart)
+        do_stop
+        do_start
+        ;;
+  status)
+        do_status
+        ;;
+  *)
+        echo "Usage: sudo service snonos {start|stop|restart|status}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
