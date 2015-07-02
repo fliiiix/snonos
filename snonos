@@ -57,9 +57,9 @@ do_stop() {
 do_status () {
   check_pid
   if [ "$PID" -ne 0 -a "$STATUS" -ne 0 ]; then
-    echo "$DESC with PID $PID is running."
+    echo "Snonos with PID $PID is running."
   else
-    echo "$DESC is not running."
+    echo "Snonos is not running."
     exit 1
   fi
 }
